@@ -1,5 +1,11 @@
+import NotificationProvider from "./component/NotificationProvider";
+
 function App() {
-  return <div>Hello World</div>;
+  return (
+    <div>
+      <NotificationProvider />
+    </div>
+  );
 }
 
 export default App;

@@ -7,12 +7,13 @@ export class NotificationRepository {
   constructor(private prisma: PrismaService) {}
 
   async saveToken(device: SaveTokenDto): Promise<{ statusCode: HttpStatus }> {
-    this.prisma.fCMToken.upsert({
-      where: { token: device.token },
-      update: { deviceId: device.deviceId, updatedAt: new Date() },
-      create: { ...device },
-    });
-
+    this.prisma.fCMToken
+      .upsert({
+        where: { token: device.token },
+        update: { deviceId: device.deviceId, updatedAt: new Date() },
+        create: { ...device },
+      })
+      .then((res) => res.token);
     return { statusCode: HttpStatus.CREATED };
   }
 }

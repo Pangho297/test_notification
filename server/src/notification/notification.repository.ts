@@ -1,6 +1,7 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { SaveTokenDto } from './dto/save-token.dto';
 import { PrismaService } from '@/shared/prisma/prisma.service';
+import { FCMTokenDto } from './dto/fcmtoken.dto';
 
 @Injectable()
 export class NotificationRepository {
@@ -15,5 +16,11 @@ export class NotificationRepository {
       })
       .then((res) => res.token);
     return { statusCode: HttpStatus.CREATED };
+  }
+
+  async getFCMTokenToAll(): Promise<FCMTokenDto[]> {
+    return await this.prisma.fCMToken
+      .findMany()
+      .then((ls) => ls.map(FCMTokenDto.from));
   }
 }

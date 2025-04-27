@@ -7,5 +7,8 @@ export default defineConfig({
   plugins: [react(), mkcert()],
   server: {
     open: true,
+    headers: {
+      "Service-Worker-Allowed": "/",
+    }
   },
 });

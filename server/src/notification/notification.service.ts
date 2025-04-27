@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import * as admin from 'firebase-admin';
 import { SaveTokenDto } from './dto/save-token.dto';
 import { NotificationRepository } from './notification.repository';
+import { SendNotificationDto } from './dto/send-notification.dto';
+import { SendNotificationToAllDto } from './dto/send-notification-to-all.dto';
 
 @Injectable()
 export class NotificationService {
@@ -19,5 +21,29 @@ export class NotificationService {
 
   async saveToken(device: SaveTokenDto) {
     this.notificationRepository.saveToken(device);
+  }
+
+  async sendNotification({ token, ...notification }: SendNotificationDto) {
+    try {
+      const message = {
+        token,
+        notification,
+      };
+      return await this.firebaseAdmin.messaging().send(message);
+    } catch (error) {
+      console.error('FCM 전송 실패', error);
+    }
+  }
+
+  async sendNotificationToAll(notification: SendNotificationToAllDto) {
+    const tokens = await this.notificationRepository.getFCMTokenToAll();
+    const messages = tokens.map(({ token }) => ({
+      token,
+      notification,
+    }));
+
+    return Promise.all(
+      messages.map((message) => this.firebaseAdmin.messaging().send(message)),
+    );
   }
 }

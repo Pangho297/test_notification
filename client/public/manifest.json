@@ -1,0 +1,6 @@
+{
+  "name": "Test-Notification",
+  "short_name": "Test",
+  "start_url": "https://localhost:5173",
+  "display": "standalone"
+}
